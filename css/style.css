@@ -19,6 +19,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* オープニングアニメーション中はページスクロールをロックし、
+   裏側のボディが一緒に動いてしまわないようにする */
+html.hero-scroll-lock,
+html.hero-scroll-lock body {
+  overflow: hidden;
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: var(--font-base);
@@ -33,7 +41,7 @@ a { text-decoration: none; color: inherit; }
 ul, dl { margin: 0; padding: 0; list-style: none; }
 h1, h2, p { margin: 0; }
 
-.reveal, .reveal-box {
+.reveal, .reveal-box, .msg-fadeup {
   opacity: 0;
 }
 
@@ -62,6 +70,7 @@ h1, h2, p { margin: 0; }
 
 .site-header__logo {
   font-size: 1.15rem;
+  font-weight: bold;
   letter-spacing: 0.08em;
   color: #ffffff;
   transition: color 0.4s ease;
@@ -122,6 +131,7 @@ h1, h2, p { margin: 0; }
   transform: translateX(-50%);
   color: #ffffff;
   font-size: 0.75rem;
+  font-weight: bold;
   letter-spacing: 0.3em;
   opacity: 0;
   z-index: 3;
@@ -129,7 +139,7 @@ h1, h2, p { margin: 0; }
 
 .hero__logo {
   position: absolute;
-  width: min(180px, 30vw);
+  width: min(234px, 39vw);
   z-index: 4;
   opacity: 0;
 }
@@ -143,8 +153,6 @@ h1, h2, p { margin: 0; }
 .site-body {
   margin-left: 50vw;
   background: var(--color-main);
-  position: relative;
-  z-index: 20;
 }
 
 main { display: flex; flex-direction: column; }
