@@ -7,6 +7,7 @@
   --color-sub1: #FAF1E6;
   --color-sub2: #E4EFE7;
   --color-sub3: #99BC85;
+  --color-sub3-light: #E3EEDB;
   --color-heading: #262620;
   --color-body: #8c8c86;
   --color-cta: #BC8599;
@@ -164,10 +165,14 @@ main { display: flex; flex-direction: column; }
 }
 
 .section-heading {
-  font-size: 1.3rem;
+  font-size: 1.95rem;
   font-weight: bold;
   color: var(--color-heading);
   margin-bottom: 40px;
+}
+
+.news-section {
+  margin-top: -120px;
 }
 
 /* =====================
@@ -176,11 +181,16 @@ main { display: flex; flex-direction: column; }
 .msg-section { padding-top: 140px; }
 
 .msg-catch-wrap {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 18px;
   margin-left: 8%;
+  /* 右に100px、上に100pxずらす */
+  top: -100px;
+  left: 70px;
   /* 縦書き2行分（最長行11文字程度）が折り返さず収まる高さ */
   height: 640px;
 }
@@ -188,7 +198,7 @@ main { display: flex; flex-direction: column; }
 .msg-catch-jp {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-size: 1.6rem;
+  font-size: 2.08rem;
   color: var(--color-heading);
   letter-spacing: 0.15em;
   line-height: 1.9;
@@ -197,7 +207,7 @@ main { display: flex; flex-direction: column; }
 .msg-catch-en {
   writing-mode: vertical-rl;
   text-orientation: sideways;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: var(--color-body);
   letter-spacing: 0.1em;
   line-height: 1.7;
@@ -205,9 +215,16 @@ main { display: flex; flex-direction: column; }
 
 .msg-image-wrap {
   position: relative;
-  margin-top: 40px;
-  margin-left: auto;
-  width: 80%;
+  /* 画像はキャッチコピーの後ろに回り込むよう、テキストより低いz-indexにする */
+  z-index: 1;
+  /* キャッチコピー（高さ640px）に対して下から4割ほど被る位置まで引き上げる */
+  margin-top: -500px;
+  /* 左は「ボディ幅(50vw)の20%」=10vw のうち、セクションのpadding-left(4vw)分を
+     差し引いた残りをmargin-leftで確保する */
+  margin-left: 6vw;
+  /* セクションのpadding-right(4vw)を打ち消して右端を画面端まで伸ばす */
+  margin-right: -4vw;
+  width: 40vw;
 }
 
 .msg-image {
@@ -223,26 +240,40 @@ main { display: flex; flex-direction: column; }
 }
 
 .msg-illust--1 {
-  width: 90px;
+  width: 130px;
   right: 8%;
-  bottom: -18%;
+  /* イメージ画像の下端より完全に下に来るよう固定pxで調整 */
+  bottom: -120px;
 }
 
 .msg-illust--2 {
-  width: 100px;
-  margin: 40px auto 0 30%;
+  /* .msg-illustのposition:absoluteを解除しないとmargin:autoが効かないため */
+  position: static;
+  /* ボディ幅(50vw)の5割 */
+  width: 25vw;
+  margin: 100px auto 0;
 }
 
 .msg-greeting {
-  margin-top: 60px;
+  position: relative;
+  z-index: 2;
+  margin-top: 160px;
+  /* 一番長い行(約26文字)が折り返さない幅を確保しつつ、左右にマージンを取って中央に寄せる */
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
   text-align: left;
 }
 
-.msg-greeting p { margin-bottom: 1.4em; }
+.msg-greeting p { margin-bottom: 2.5em; line-height: 4; }
 
 /* =====================
    Service section
 ===================== */
+.service-section {
+  margin-top: -200px;
+}
+
 .service-item {
   position: relative;
   padding: 100px 0;
@@ -251,21 +282,52 @@ main { display: flex; flex-direction: column; }
 
 .service-item__box {
   position: absolute;
-  top: 12%;
+  top: 20%;
   width: 78%;
   height: 60%;
-  border-radius: 12px;
   z-index: 1;
 }
 
-.service-item--1 .service-item__box { background: var(--color-sub1); left: 50%; transform: translateX(-50%); }
-.service-item--2 .service-item__box { background: var(--color-sub2); left: 0; }
-.service-item--3 .service-item__box { background: var(--color-sub3); right: 0; }
+.service-item--1 .service-item__box {
+  background: var(--color-sub1);
+  left: 50%;
+  transform: translateX(-50%);
+  /* ボディ幅(50vw)と揃える */
+  width: 50vw;
+  /* padding-top(100px)分ある画像の上端から10px上 */
+  top: 180px;
+  /* padding-bottom(100px)分あるボタンの下端から20px下 */
+  bottom: 40px;
+  height: auto;
+}
+.service-item--2 .service-item__box {
+  /* 事業1・事業3となじむ明るさの薄い緑に変更 */
+  background: var(--color-sub3-light);
+  /* セクションのpadding-left(4vw)を打ち消してボディ左端まで伸ばす */
+  left: -4vw;
+  /* 右側はボディ幅(50vw)の15%(7.5vw)分の余白を残す幅にする */
+  width: 35vw;
+  /* 事業1の背景ボックスと上下位置・サイズを揃える */
+  top: 180px;
+  bottom: 40px;
+  height: auto;
+}
+.service-item--3 .service-item__box {
+  background: var(--color-sub2);
+  /* セクションのpadding-right(4vw)を打ち消してボディ右端まで伸ばす */
+  right: -4vw;
+  /* 左側はボディ幅(50vw)の85%(42.5vw)分の余白を残す幅にする */
+  width: 35vw;
+  /* 事業1の背景ボックスと上下位置・サイズを揃える */
+  top: 180px;
+  bottom: 40px;
+  height: auto;
+}
 
 .service-item__media {
   position: relative;
   z-index: 2;
-  width: 66%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -276,15 +338,27 @@ main { display: flex; flex-direction: column; }
   border-radius: 20px;
 }
 
+.service-item--3 .service-item__image {
+  filter: brightness(1.5);
+}
+
 .service-item__illust {
   position: absolute;
-  width: 70px;
+  width: 104px;
   right: -10%;
   bottom: -12%;
 }
 
-.service-item--2 .service-item__illust,
+.service-item--1 .service-item__illust {
+  width: 135px;
+  transform: translateY(60px);
+}
+
 .service-item--3 .service-item__illust {
+  transform: translate(20px, 30px) rotate(25deg);
+}
+
+.service-item--2 .service-item__illust {
   right: auto;
   left: -10%;
   bottom: -12%;
@@ -312,8 +386,11 @@ main { display: flex; flex-direction: column; }
   position: relative;
   z-index: 2;
   margin-top: 16px;
+  /* 幅を狭めて左右に余白を作り、中央寄りに見えるようにする */
+  max-width: 440px;
   text-align: left;
   display: inline-block;
+  color: var(--color-heading);
 }
 
 .service-item__btn {
@@ -342,8 +419,8 @@ main { display: flex; flex-direction: column; }
 }
 
 .news-item__thumb {
-  width: 96px;
-  height: 96px;
+  width: 108px;
+  height: 108px;
   flex-shrink: 0;
   border-radius: 16px;
   overflow: hidden;
@@ -366,7 +443,6 @@ main { display: flex; flex-direction: column; }
   color: var(--color-sub3);
   font-size: 0.7rem;
   padding: 3px 10px;
-  border-radius: 999px;
 }
 
 .news-item__date { font-size: 0.75rem; color: var(--color-body); }
@@ -401,16 +477,21 @@ main { display: flex; flex-direction: column; }
 .access-address {
   text-align: left;
   color: var(--color-body);
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .access-btn {
-  display: inline-block;
-  margin-top: 28px;
+  display: block;
+  width: fit-content;
+  margin: 28px auto 0;
   padding: 12px 32px;
   border-radius: 999px;
-  border: 1px solid var(--color-sub3);
+  border: 2px solid var(--color-sub3);
   color: var(--color-sub3);
   font-size: 0.85rem;
+  font-weight: bold;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 .access-btn:hover { background: var(--color-sub3); color: #ffffff; }
@@ -418,13 +499,24 @@ main { display: flex; flex-direction: column; }
 /* =====================
    Shop info
 ===================== */
+.shopinfo-section {
+  /* アクセスとの間隔を半分(240px→120px)にする */
+  margin-top: -120px;
+}
+
+.shopinfo-list {
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .shopinfo-row {
   display: flex;
-  gap: 32px;
+  gap: 16px;
   padding: 14px 0;
   border-bottom: 1px solid var(--color-sub1);
 }
-.shopinfo-row dt { width: 100px; color: var(--color-heading); font-weight: bold; }
+.shopinfo-row dt { width: auto; white-space: nowrap; color: var(--color-heading); font-weight: bold; }
 .shopinfo-row dd { color: var(--color-body); }
 
 /* =====================
@@ -514,9 +606,9 @@ main { display: flex; flex-direction: column; }
 
   .site-body { margin-left: 0; }
 
-  .msg-catch-wrap { margin-left: 0; height: auto; }
-  .msg-image-wrap { width: 100%; }
-  .msg-illust--2 { margin-left: 10%; }
+  .msg-catch-wrap { margin-left: 0; height: auto; top: 0; left: 0; }
+  .msg-image-wrap { width: 100%; margin-left: 0; margin-right: 0; margin-top: 40px; }
+  .msg-illust--2 { width: 50%; margin-left: auto; margin-right: auto; }
 
   .service-item__box { width: 90%; }
   .service-item__media { width: 82%; }
@@ -526,6 +618,8 @@ main { display: flex; flex-direction: column; }
   .shopinfo-section {
     padding: 90px 6%;
   }
+
+  .shopinfo-section { margin-top: -90px; }
 }
 
 /* =====================
