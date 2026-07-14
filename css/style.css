@@ -181,7 +181,8 @@ main { display: flex; flex-direction: column; }
   justify-content: flex-start;
   gap: 18px;
   margin-left: 8%;
-  height: 320px;
+  /* 縦書き2行分（最長行11文字程度）が折り返さず収まる高さ */
+  height: 640px;
 }
 
 .msg-catch-jp {
