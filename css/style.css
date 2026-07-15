@@ -18,6 +18,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* オープニングアニメーション中はページスクロールをロックし、
@@ -229,8 +230,10 @@ main { display: flex; flex-direction: column; }
 
 .msg-image {
   width: 100%;
-  border-top-left-radius: 120px;
-  border-bottom-left-radius: 120px;
+  /* px固定だと画像が縮小したときに相対的に丸みが強くなりすぎるため、
+     ボックスサイズに対する割合(%)にして常に同じ丸角の見え方を保つ */
+  border-top-left-radius: 20%;
+  border-bottom-left-radius: 20%;
   object-fit: cover;
   aspect-ratio: 4 / 3;
 }
@@ -266,6 +269,9 @@ main { display: flex; flex-direction: column; }
 }
 
 .msg-greeting p { margin-bottom: 2.5em; line-height: 4; }
+
+/* スマホ表示でだけ改行したい箇所に入れる用。デスクトップでは無効化しておく */
+.mobile-break { display: none; }
 
 /* =====================
    Service section
@@ -485,6 +491,7 @@ main { display: flex; flex-direction: column; }
 .access-btn {
   display: block;
   width: fit-content;
+  white-space: nowrap;
   margin: 28px auto 0;
   padding: 12px 32px;
   border-radius: 999px;
@@ -525,8 +532,7 @@ main { display: flex; flex-direction: column; }
 .cta-section {
   background-size: cover;
   background-position: center;
-  padding: 140px 8%;
-  text-align: center;
+  padding: 140px 8%;  text-align: center;
   position: relative;
 }
 .cta-section::before {
@@ -606,12 +612,43 @@ main { display: flex; flex-direction: column; }
 
   .site-body { margin-left: 0; }
 
-  .msg-catch-wrap { margin-left: 0; height: auto; top: 0; left: 0; }
-  .msg-image-wrap { width: 100%; margin-left: 0; margin-right: 0; margin-top: 40px; }
-  .msg-illust--2 { width: 50%; margin-left: auto; margin-right: auto; }
+  /* -220pxはブレイクポイント上限(1025px)基準の値。vwにして画面幅に応じて比例的に変化させ、
+     狭い画面でフレームアウトしないようにする */
+  .msg-catch-wrap { margin-left: 0; height: auto; top: 0; left: -21.46vw; justify-content: center; }
+  .msg-image-wrap { width: 80vw; margin-left: 14vw; margin-right: 0; margin-top: -210px; }
+  .msg-illust--2 { width: 50%; margin-left: auto; margin-right: auto; margin-top: 60px; }
 
-  .service-item__box { width: 90%; }
-  .service-item__media { width: 82%; }
+  /* 左右余白の合計:画像幅 = 4:5 → 画像幅は全体の 5/9 ≒ 55.56%（余白合計は残り 4/9） */
+  .service-item__media { width: 55.56%; }
+
+  .service-item__desc { max-width: 82%; }
+
+  .service-item__btn {
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* デスクトップ版と同じ考え方（ボディ幅=100vw、セクション左右padding=6vw）で
+     背景ボックスの幅・位置を再計算する */
+  /* .service-itemはセクションのpadding(6%)分だけ画面端より内側にあるため、width:100%では
+     画面幅まで届かない。left/rightを両方指定してwidth:autoで隙間を埋める形にすると、
+     width:100vwのようなスクロールバー起因の誤差を持ち込まずに画面端まで届かせられる */
+  .service-item--1 .service-item__box {
+    left: -6vw;
+    right: -6vw;
+    width: auto;
+    transform: none;
+  }
+  .service-item--2 .service-item__box {
+    left: -6vw;
+    width: 70vw;
+  }
+  .service-item--3 .service-item__box {
+    right: -6vw;
+    width: 70vw;
+  }
 
   .section-inner,
   .msg-section, .service-section, .news-section, .access-section,
@@ -620,16 +657,135 @@ main { display: flex; flex-direction: column; }
   }
 
   .shopinfo-section { margin-top: -90px; }
+
+  /* ご挨拶の行間をスマホ表示では半分くらいに詰める */
+  .msg-greeting p { line-height: 2; }
+
+  .mobile-break { display: inline; }
+
+  /* ニュース以下は左右余白の合計:コンテンツ幅がおよそ2:1.5になる幅に絞り、
+     画面中央寄りに配置。中身のテキスト自体は左寄せのまま */
+  .news-section .section-heading,
+  .news-list,
+  .news-more,
+  .access-section .section-heading,
+  .access-address,
+  .access-btn,
+  .shopinfo-section .section-heading,
+  .shopinfo-list {
+    max-width: 48.7%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .section-heading { text-align: left; }
+
+  /* コンテンツ幅が絞られた分、サムネイルを少し縮めて右の文字部分がちょうどいい幅になるようにする */
+  .news-item__thumb { width: 88px; height: 88px; }
+  .news-item__link { gap: 14px; }
+
+  /* アクセス・ショップインフォの本文をタイトルより31.2px(section-headingの文字サイズ分)中央に寄せる */
+  .access-address,
+  .shopinfo-list {
+    transform: translateX(31.2px);
+  }
 }
 
 /* =====================
-   Responsive: <=330px
+   Responsive: <=430px
 ===================== */
-@media (max-width: 330px) {
-  .site-header { background-color: transparent; }
+@media (max-width: 430px) {
+  /* 8割サイズ(130px→104px)はモバイルだけに適用したいのでここに置く。
+     rightを20px分減らして右に20px動かす */
+  .msg-illust--1 { width: 104px; right: calc(8% - 20px); }
+
+  .msg-greeting { padding: 0 10px; }
+
+  /* margin-topは-210pxがベース(@media 1025px)。そこから70px分下げる */
+  .msg-image-wrap { width: 90vw; margin-left: 4vw; margin-top: -140px; }
+
+  /* gapだけだと列自体の余白(line-height)に埋もれて変化が見えにくいため、
+     line-heightも縮めて列の実際の幅自体を狭くする */
+  .msg-catch-wrap { gap: 4px; }
+  .msg-catch-jp { letter-spacing: 0.05em; line-height: 1.3; }
+  .msg-catch-en { letter-spacing: 0.05em; line-height: 1.2; }
+
+  /* サービスの画像が小さくなりすぎないよう、左右余白30px相当(=画面幅-60px)を基本にしつつ、
+     340px(400px時点で余白30pxとなるサイズ)を下限にしてそれ以上は縮まないようにする。
+     ただし340pxが親要素(.service-item)の幅を超える画面幅だと、margin:autoが左右対称に
+     効かなくなり(margin-leftが0固定、margin-rightだけがはみ出し分を吸収する挙動になる)
+     左右の余白が非対称に見えてしまうため、100%(親要素の幅)を上限にして超えないようにする */
+  .service-item__media { width: min(max(340px, calc(100vw - 60px)), 100%); }
+
+  /* 事業1のイラスト: 画像の外にはみ出す配置(bottom:-12%+translateY(60px))だと
+     余白を狭くしてしまう上、下の文字(タイトル)にまで被ってしまうため、
+     サイズを小さくして画像の右下の角に少しだけ被る程度に収める */
+  .service-item--1 .service-item__illust {
+    width: 90px;
+    right: 0;
+    bottom: -90px;
+    transform: none;
+  }
+
+  /* 事業2はイラストが左側にあるので、事業1と左右を反転させて同じ考え方を適用する */
+  .service-item--2 .service-item__illust {
+    width: 90px;
+    left: -10px;
+    bottom: -60px;
+  }
+
+  /* 事業3は右側配置は事業1と同じ。傾き(rotate)の演出は残しつつ、
+     はみ出す原因だったtranslateのオフセットだけ外す */
+  .service-item--3 .service-item__illust {
+    width: 80px;
+    right: -5px;
+    bottom: -90px;
+    transform: rotate(25deg);
+  }
+
+  /* 高さを固定76pxではなく、文字の上下に10pxほど余白を取った分だけの高さ(auto)にする */
+  .site-header { background-color: var(--color-main); height: auto; padding: 10px 40px; }
+  .site-header__logo { color: var(--color-heading); margin-left: -15px; }
 
   .hero__catch { font-size: 1.15rem; }
   .msg-catch-jp { font-size: 1.2rem; }
 
   .service-item__title { font-size: 1.25rem; }
+
+  /* 430px以下では余白の合計:コンテンツ幅を48.7%で保つと横幅が狭くなりすぎて、
+     ニュースのタイトルが1文字ずつ改行されて縦書きのように見えてしまう。
+     左右余白を画面幅基準の固定30px(-6vwでセクションpaddingを打ち消し、+30pxで付け直す)に変えて
+     2カラム(サムネイル+文字)を保ったまま横書きで収まる幅を確保する。
+     サムネイルと行間も少し縮めて全体を多少コンパクトにする */
+  .news-section .section-heading,
+  .news-list,
+  .news-more {
+    max-width: none;
+    margin-left: calc(-6vw + 30px);
+    margin-right: calc(-6vw + 30px);
+  }
+  .news-item__thumb { width: 64px; height: 64px; }
+  .news-item__link { gap: 10px; }
+  .news-item__title { font-size: 0.85rem; }
+  .news-item__badge { font-size: 0.65rem; padding: 2px 8px; }
+  .news-item__date { font-size: 0.7rem; }
+
+  /* アクセス・ショップインフォもニュースと同じ左右固定30pxの余白に揃える。
+     お問い合わせボタンだけは他と違い中央配置にしたいので、この対象からは外し
+     width:fit-content + margin:auto(ベースの.access-btnルール)による中央寄せのままにする */
+  .access-section .section-heading,
+  .access-address,
+  .shopinfo-section .section-heading,
+  .shopinfo-list {
+    max-width: none;
+    margin-left: calc(-6vw + 30px);
+    margin-right: calc(-6vw + 30px);
+  }
+
+  /* white-space:nowrapにした分、幅の狭い画面ではボタン自体(fit-content)が
+     コンテナ幅に押し縮められて文字がはみ出してしまうため、
+     padding/font-sizeを小さくして一行の文字が収まる大きさにする */
+  .access-btn {
+    padding: 10px 20px;
+    font-size: 0.75rem;
+  }
 }

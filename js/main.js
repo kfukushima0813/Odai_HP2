@@ -166,6 +166,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // dockHero()がheroEl.styleに直接書き込むwidth:50vwは、インラインスタイルのため
+  // モバイル用メディアクエリのwidth指定より優先されてしまう。デスクトップ→モバイルへの
+  // リサイズ時にこの残留インラインwidthを解除し、CSS側のwidth:100%を効かせる
+  function syncHeroWidthForViewport() {
+    if (!isDesktop()) {
+      gsap.set(heroEl, { clearProps: 'width' });
+    } else if (docked) {
+      gsap.set(heroEl, { width: '50vw' });
+    }
+  }
+
   function handleTinyHeader() {
     if (window.matchMedia('(max-width: 330px)').matches) {
       const threshold = heroEl.offsetHeight - 80;
@@ -237,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveals();
 
   window.addEventListener('resize', initHeaderForViewport);
+  window.addEventListener('resize', syncHeroWidthForViewport);
   window.addEventListener('scroll', handleTinyHeader, { passive: true });
 
   const pageTopBtn = document.getElementById('pageTopBtn');
