@@ -43,10 +43,6 @@ a { text-decoration: none; color: inherit; }
 ul, dl { margin: 0; padding: 0; list-style: none; }
 h1, h2, p { margin: 0; }
 
-.reveal, .reveal-box, .msg-fadeup {
-  opacity: 0;
-}
-
 /* =====================
    Header
 ===================== */
@@ -128,26 +124,79 @@ h1, h2, p { margin: 0; }
 
 .hero__scroll {
   position: absolute;
-  bottom: 40px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  z-index: 3;
+  /* ロゴと同じ仕組みで、表示中のヒーロー画像のベースカラーに合わせてJS側で書き換える */
+  --scroll-shadow-tight: rgba(50, 52, 48, 0.8);
+  --scroll-shadow-soft: rgba(50, 52, 48, 0.6);
+}
+
+.hero__scroll-text {
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: bold;
   letter-spacing: 0.3em;
-  opacity: 0;
-  z-index: 3;
+  text-shadow: 0 0 3px var(--scroll-shadow-tight), 0 2px 10px var(--scroll-shadow-soft);
+  transform: translateX(2px);
+}
+
+/* LEDのように光の粒が上から下へ流れる縦ライン */
+.hero__scroll-line {
+  position: relative;
+  display: block;
+  width: 2px;
+  height: 27px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.hero__scroll-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -22px;
+  width: 100%;
+  height: 22px;
+  background: linear-gradient(to bottom, transparent, #ffffff 50%, transparent);
+  animation: heroScrollLineGlow 1.8s ease-in-out infinite;
+}
+
+@keyframes heroScrollLineGlow {
+  0% { top: -22px; }
+  100% { top: 27px; }
 }
 
 .hero__logo {
   position: absolute;
-  width: min(234px, 39vw);
+  width: min(351px, 58.5vw);
   z-index: 4;
   opacity: 0;
+  /* 表示中のヒーロー画像のベースカラーに合わせてJS側で書き換える
+     （デフォルトは画像1のくすんだセージを暗くした色） */
+  --logo-shadow-tight: rgba(50, 52, 48, 0.8);
+  --logo-shadow-soft: rgba(50, 52, 48, 0.6);
 }
 
-.hero__logo.is-white { filter: brightness(0) invert(1); }
-.hero__logo.is-black { filter: brightness(0); }
+/* 背景の写真に埋もれないよう、輪郭のくっきりした影+ソフトな影の2重がけでコントラストを付ける。
+   色は写真のベースカラーに合わせてなじむようJSから差し替える */
+.hero__logo.is-white {
+  filter: brightness(0) invert(1)
+    drop-shadow(0 0 3px var(--logo-shadow-tight))
+    drop-shadow(0 2px 10px var(--logo-shadow-soft));
+}
+.hero__logo.is-black {
+  filter: brightness(0)
+    drop-shadow(0 0 4px var(--logo-shadow-tight))
+    drop-shadow(0 0 4px var(--logo-shadow-tight))
+    drop-shadow(0 2px 14px var(--logo-shadow-soft));
+}
 
 /* =====================
    Body (right panel)
@@ -187,11 +236,12 @@ main { display: flex; flex-direction: column; }
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 18px;
-  margin-left: 8%;
-  /* 右に100px、上に100pxずらす */
+  gap: 5px;
+  margin-left: calc(8% - 35px);
+  /* 右に40px、上に100pxずらす */
   top: -100px;
-  left: 70px;
+  left: 40px;
+
   /* 縦書き2行分（最長行11文字程度）が折り返さず収まる高さ */
   height: 640px;
 }
@@ -243,10 +293,26 @@ main { display: flex; flex-direction: column; }
 }
 
 .msg-illust--1 {
-  width: 130px;
+  width: 150px;
+  /* イラスト1.png(357×338)の縦横比 */
+  aspect-ratio: 357 / 338;
   right: 8%;
   /* イメージ画像の下端より完全に下に来るよう固定pxで調整 */
-  bottom: -120px;
+  bottom: -135px;
+  rotate: 12deg;
+  /* PNGの黒い線画をmaskとして使い、サイトのアクセントカラーで塗りつぶす。
+     画像に被っても埋もれないよう控えめな影も付ける */
+  /* --color-sub3(#99BC85)を少し濃くした色 */
+  background-color: #728D63;
+  filter: drop-shadow(0 2px 4px rgba(38, 38, 32, 0.35));
+  mask-image: url('../picture/illust/イラスト1.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url('../picture/illust/イラスト1.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
 }
 
 .msg-illust--2 {
@@ -263,6 +329,7 @@ main { display: flex; flex-direction: column; }
   margin-top: 160px;
   /* 一番長い行(約26文字)が折り返さない幅を確保しつつ、左右にマージンを取って中央に寄せる */
   max-width: 420px;
+  margin-top:100px;
   margin-left: auto;
   margin-right: auto;
   text-align: left;
@@ -296,8 +363,10 @@ main { display: flex; flex-direction: column; }
 
 .service-item--1 .service-item__box {
   background: var(--color-sub1);
+  /* GSAPのxPercentアニメーションがtransformプロパティを上書きするため、
+     transform: translateX(-50%)を使わずmargin-leftで中央揃えする */
   left: 50%;
-  transform: translateX(-50%);
+  margin-left: -25vw;
   /* ボディ幅(50vw)と揃える */
   width: 50vw;
   /* padding-top(100px)分ある画像の上端から10px上 */
@@ -351,16 +420,34 @@ main { display: flex; flex-direction: column; }
 .service-item__illust {
   position: absolute;
   width: 104px;
+  aspect-ratio: 1 / 1;
   right: -10%;
   bottom: -12%;
+  /* 背景ボックス・写真どちらの上でも埋もれないよう、各事業のアクセントカラーを
+     少し濃くした色(--illust-color、articleで定義)で塗りつぶし、控えめな影で輪郭を出す。
+     ボタンの色(--btn-color)とは別にしている */
+  background-color: var(--illust-color);
+  filter: drop-shadow(0 2px 4px rgba(38, 38, 32, 0.35));
+  mask-image: var(--illust-src);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: var(--illust-src);
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
 }
 
 .service-item--1 .service-item__illust {
   width: 135px;
+  /* イラスト3.png(239×355)の縦横比 */
+  aspect-ratio: 239 / 355;
   transform: translateY(60px);
 }
 
 .service-item--3 .service-item__illust {
+  /* イラスト5.png(829×1200)の縦横比 */
+  aspect-ratio: 829 / 1200;
   transform: translate(20px, 30px) rotate(25deg);
 }
 
@@ -368,11 +455,14 @@ main { display: flex; flex-direction: column; }
   right: auto;
   left: -10%;
   bottom: -12%;
+  /* イラスト4.png(284×285)の縦横比 */
+  aspect-ratio: 284 / 285;
 }
 
 .service-item__title {
   position: relative;
   z-index: 2;
+  top: -20px;
   margin-top: 44px;
   font-size: 1.6rem;
   font-weight: bold;
@@ -382,6 +472,7 @@ main { display: flex; flex-direction: column; }
 .service-item__subtitle {
   position: relative;
   z-index: 2;
+  top: -20px;
   margin-top: 12px;
   font-size: 0.95rem;
   font-weight: bold;
@@ -391,6 +482,7 @@ main { display: flex; flex-direction: column; }
 .service-item__desc {
   position: relative;
   z-index: 2;
+  top: -20px;
   margin-top: 16px;
   /* 幅を狭めて左右に余白を作り、中央寄りに見えるようにする */
   max-width: 440px;
@@ -402,6 +494,7 @@ main { display: flex; flex-direction: column; }
 .service-item__btn {
   position: relative;
   z-index: 2;
+  top: -20px;
   display: inline-block;
   margin-top: 28px;
   padding: 12px 32px;
@@ -469,7 +562,17 @@ main { display: flex; flex-direction: column; }
   text-align: right;
   font-size: 0.85rem;
   color: var(--color-heading);
+  transition: color 0.3s ease;
 }
+
+.news-more:hover { color: #b9b9b3; }
+
+.news-more__arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.news-more:hover .news-more__arrow { transform: translateX(4px); }
 
 /* =====================
    Access
@@ -543,7 +646,7 @@ main { display: flex; flex-direction: column; }
 }
 .cta-inner { position: relative; z-index: 1; }
 
-.cta-heading { color: #ffffff; font-size: 1.8rem; font-weight: bold; }
+.cta-heading { color: #ffffff; font-size: 1.8rem; font-weight: bold; letter-spacing: 0.05em; }
 .cta-subheading { color: #ffffff; font-size: 0.85rem; font-weight: bold; margin-top: 8px; letter-spacing: 0.1em; }
 .cta-desc { color: #ffffff; font-weight: bold; margin-top: 24px; max-width: 440px; margin-inline: auto; }
 
@@ -555,9 +658,9 @@ main { display: flex; flex-direction: column; }
   background: var(--color-cta);
   color: #ffffff;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  transition: filter 0.3s ease;
 }
-.cta-btn:hover { background-color: rgba(188, 133, 153, 0.95); }
+.cta-btn:hover { filter: brightness(1.15); }
 
 /* =====================
    Footer
@@ -570,16 +673,16 @@ main { display: flex; flex-direction: column; }
 .site-footer__sns {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
 }
-.site-footer__sns img { width: 26px; height: 26px; }
+.site-footer__sns img { width: 34px; height: 34px; }
 
 .footer__pagetop {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  margin: 24px auto 0;
+  gap: 12px;
+  margin: 54px auto 0;
   background: none;
   border: none;
   cursor: pointer;
@@ -589,11 +692,16 @@ main { display: flex; flex-direction: column; }
   font-family: var(--font-base);
 }
 .footer__pagetop:hover { opacity: 0.4; }
-.footer__pagetop-arrow { font-size: 1.1rem; }
-.footer__pagetop-text { font-size: 0.7rem; letter-spacing: 0.2em; }
+.footer__pagetop-arrow {
+  display: inline-block;
+  line-height: 0;
+  transition: transform 0.3s ease;
+}
+.footer__pagetop:hover .footer__pagetop-arrow { transform: translateY(-4px); }
+.footer__pagetop-text { font-size: 0.7rem; font-weight: bold; letter-spacing: 0.2em; }
 
 .site-footer__copyright {
-  margin-top: 28px;
+  margin-top: 38px;
   font-size: 0.7rem;
   color: var(--color-body);
 }
@@ -612,11 +720,14 @@ main { display: flex; flex-direction: column; }
 
   .site-body { margin-left: 0; }
 
-  /* -220pxはブレイクポイント上限(1025px)基準の値。vwにして画面幅に応じて比例的に変化させ、
-     狭い画面でフレームアウトしないようにする */
-  .msg-catch-wrap { margin-left: 0; height: auto; top: 0; left: -21.46vw; justify-content: center; }
-  .msg-image-wrap { width: 80vw; margin-left: 14vw; margin-right: 0; margin-top: -210px; }
-  .msg-illust--2 { width: 50%; margin-left: auto; margin-right: auto; margin-top: 60px; }
+  /* vwにして画面幅に応じて比例的に変化させ、狭い画面でフレームアウトしないようにする */
+  .msg-catch-wrap { margin-left: 0; height: auto; top: 60px; left: -30vw; justify-content: center; }
+  /* ベース(2.08rem)の約1.2倍 */
+  .msg-catch-jp { font-size: 2.5rem; }
+  .msg-image-wrap { width: 90vw; margin-left: 7vw; margin-right: 0; margin-top: -180px; }
+  .msg-illust--1 { width: 150px; right: 8%; bottom: -190px; }
+  .msg-illust--2 { width: 40%; margin-left: auto; margin-right: auto; margin-top: -20px; }
+  .msg-greeting { margin-top: 230px; margin-left: auto; margin-right: auto; max-width: 50%; }
 
   /* 左右余白の合計:画像幅 = 4:5 → 画像幅は全体の 5/9 ≒ 55.56%（余白合計は残り 4/9） */
   .service-item__media { width: 55.56%; }
@@ -629,6 +740,9 @@ main { display: flex; flex-direction: column; }
     margin-left: auto;
     margin-right: auto;
   }
+
+  /* 事業アイテム間の余白(上下padding合計200px)を半分(100px)にする */
+  .service-item { padding: 50px 0; }
 
   /* デスクトップ版と同じ考え方（ボディ幅=100vw、セクション左右padding=6vw）で
      背景ボックスの幅・位置を再計算する */
@@ -657,11 +771,6 @@ main { display: flex; flex-direction: column; }
   }
 
   .shopinfo-section { margin-top: -90px; }
-
-  /* ご挨拶の行間をスマホ表示では半分くらいに詰める */
-  .msg-greeting p { line-height: 2; }
-
-  .mobile-break { display: inline; }
 
   /* ニュース以下は左右余白の合計:コンテンツ幅がおよそ2:1.5になる幅に絞り、
      画面中央寄りに配置。中身のテキスト自体は左寄せのまま */
@@ -694,20 +803,37 @@ main { display: flex; flex-direction: column; }
    Responsive: <=430px
 ===================== */
 @media (max-width: 430px) {
-  /* 8割サイズ(130px→104px)はモバイルだけに適用したいのでここに置く。
+  /* 8割サイズ(150px→120px)はモバイルだけに適用したいのでここに置く。
      rightを20px分減らして右に20px動かす */
-  .msg-illust--1 { width: 104px; right: calc(8% - 20px); }
 
-  .msg-greeting { padding: 0 10px; }
+  .msg-illust--1 { width: 120px; right: calc(8% - 20px); bottom: -115px; }
+  .msg-illust--2 { width: 220px; margin-top: auto;margin-bottom: -10; }
+ 
+  .msg-greeting {margin-top: 60px; margin-left:auto; margin-right:auto; max-width: 85vw;}
 
-  /* margin-topは-210pxがベース(@media 1025px)。そこから70px分下げる */
-  .msg-image-wrap { width: 90vw; margin-left: 4vw; margin-top: -140px; }
+  /* ご挨拶の行間・文の折り返しは430px以下でのみPC版から変更する */
+  .msg-greeting p { line-height: 3;}
+
+  /* margin-topは-180pxがベース(@media 1025px)。そこからさらに30px上げる */
+  .msg-image-wrap { width: 90vw; margin-left: 4vw; margin-top: -210px; }
 
   /* gapだけだと列自体の余白(line-height)に埋もれて変化が見えにくいため、
      line-heightも縮めて列の実際の幅自体を狭くする */
-  .msg-catch-wrap { gap: 4px; }
-  .msg-catch-jp { letter-spacing: 0.05em; line-height: 1.3; }
-  .msg-catch-en { letter-spacing: 0.05em; line-height: 1.2; }
+  .msg-catch-wrap { gap: 10px; }
+  .msg-catch-jp {
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+    position: relative;
+    top: -100px;
+    left: 30px;
+  }
+  .msg-catch-en {
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    position: relative;
+    top: -100px;
+    left: 30px;
+  }
 
   /* サービスの画像が小さくなりすぎないよう、左右余白30px相当(=画面幅-60px)を基本にしつつ、
      340px(400px時点で余白30pxとなるサイズ)を下限にしてそれ以上は縮まないようにする。
@@ -737,8 +863,8 @@ main { display: flex; flex-direction: column; }
      はみ出す原因だったtranslateのオフセットだけ外す */
   .service-item--3 .service-item__illust {
     width: 80px;
-    right: -5px;
-    bottom: -90px;
+    right: 0px;
+    bottom: -82px;
     transform: rotate(25deg);
   }
 
@@ -747,7 +873,7 @@ main { display: flex; flex-direction: column; }
   .site-header__logo { color: var(--color-heading); margin-left: -15px; }
 
   .hero__catch { font-size: 1.15rem; }
-  .msg-catch-jp { font-size: 1.2rem; }
+  .msg-catch-jp { font-size: calc(1.2rem + 8px); }
 
   .service-item__title { font-size: 1.25rem; }
 

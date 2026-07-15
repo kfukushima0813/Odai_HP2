@@ -23,7 +23,10 @@
     <div class="hero__image hero__image--3" style="background-image:url('picture/hero_image/hero_image3.jpg')"></div>
   </div>
   <p class="hero__catch">記憶にのこる一瞬と、<br>愛おしい毎日のそばに。</p>
-  <p class="hero__scroll">SCROLL</p>
+  <div class="hero__scroll">
+    <p class="hero__scroll-text">SCROLL</p>
+    <span class="hero__scroll-line"></span>
+  </div>
   <img class="hero__logo is-white" src="picture/logo/Bloom&amp;Breath_logo透過.png" alt="Bloom &amp; Breath">
 </section>
 
@@ -38,12 +41,12 @@
 
       <div class="msg-image-wrap msg-fadeup">
         <img class="msg-image" src="picture/body_image/イメージ画像1.jpg" alt="花に囲まれた日常のワンシーン">
-        <img class="msg-illust msg-illust--1" src="picture/illust/イラスト1.png" alt="">
+        <span class="msg-illust msg-illust--1" role="img" aria-label=""></span>
       </div>
 
-      <div class="msg-greeting reveal">
-        <p>大切な人の門出を祝う花束。<br>その特別なきらめきは<br class="mobile-break">もちろん美しいものです。<br>けれど同時に、慌ただしい日常のなか、<br>部屋の片隅にぽつんと咲く一輪の花が、<br>張り詰めた心を<br class="mobile-break">そっとほどいてくれる瞬間もまた、<br>同じくらい愛おしいものだと思うのです。</p>
-        <p>人生の大きな節目に立つあなたにも。<br>なんでもない、<br class="mobile-break">けれど愛おしい今日を生きるあなたにも。<br>私たちは花を通じて、<br>暮らしに寄り添う<br class="mobile-break">「心地いい呼吸の場所」を届けたくて、<br>このお店を始めました。</p>
+      <div class="msg-greeting">
+        <p class="reveal">大切な人の門出を祝う花束。<br>その特別なきらめきは<br class="mobile-break">もちろん美しいものです。<br>けれど同時に、慌ただしい日常のなか、<br>部屋の片隅にぽつんと咲く一輪の花が、<br>張り詰めた心を<br class="mobile-break">そっとほどいてくれる瞬間もまた、<br>同じくらい愛おしいものだと思うのです。</p>
+        <p class="reveal">人生の大きな節目に立つあなたにも。<br>なんでもない、<br class="mobile-break">けれど愛おしい今日を生きるあなたにも。<br>私たちは花を通じて、<br>暮らしに寄り添う<br class="mobile-break">「心地いい呼吸の場所」を届けたくて、<br>このお店を始めました。</p>
       </div>
 
       <img class="msg-illust msg-illust--2 reveal" src="picture/illust/イラスト2.png" alt="">
@@ -51,49 +54,49 @@
 
     <section class="service-section" id="service">
 
-      <article class="service-item service-item--1">
-        <div class="reveal-box service-item__box" data-direction="center"></div>
+      <article class="service-item service-item--1" style="--btn-color:#D6C4AD; --illust-color:#A0938A;">
+        <div class="reveal-box service-item__box" data-direction="left"></div>
         <div class="service-item__media reveal">
           <img class="service-item__image" src="picture/body_image/イメージ画像2.jpg" alt="ブーケ製作の様子">
-          <img class="service-item__illust" src="picture/illust/イラスト3.png" alt="">
+          <span class="service-item__illust" style="--illust-src:url('../picture/illust/イラスト3.png');" role="img" aria-label=""></span>
         </div>
-        <p class="service-item__title reveal">Monarch Bouquet</p>
-        <p class="service-item__subtitle reveal">人生の特別な日に、言葉よりも雄弁な一束を。</p>
-        <p class="service-item__desc reveal">人生の大切な節目に想いを託す、世界にひとつだけのオーダーメイドブーケをお仕立て。</p>
-        <a href="#" class="service-item__btn reveal" style="--btn-color:#D6C4AD;">くわしくはこちら</a>
+        <p class="service-item__title">Monarch Bouquet</p>
+        <p class="service-item__subtitle">人生の特別な日に、言葉よりも雄弁な一束を。</p>
+        <p class="service-item__desc">人生の大切な節目に想いを託す、世界にひとつだけのオーダーメイドブーケをお仕立て。</p>
+        <a href="#" class="service-item__btn">くわしくはこちら</a>
       </article>
 
-      <article class="service-item service-item--2">
+      <article class="service-item service-item--2" style="--btn-color:#7A946B; --illust-color:#5B6F50;">
         <div class="reveal-box service-item__box" data-direction="left"></div>
         <div class="service-item__media reveal">
           <img class="service-item__image" src="picture/body_image/イメージ画像3.jpg" alt="花のサブスクの様子">
-          <img class="service-item__illust" src="picture/illust/イラスト4.png" alt="">
+          <span class="service-item__illust" style="--illust-src:url('../picture/illust/イラスト4.png');" role="img" aria-label=""></span>
         </div>
-        <p class="service-item__title reveal">Chrono Bloom</p>
-        <p class="service-item__subtitle reveal">なんでもない今日を、ちょっといい日に変える魔法。</p>
-        <p class="service-item__desc reveal">今が一番美しい旬のお花を定期便でお届け。いつもの日常に心地よい彩りと癒やしを。</p>
-        <a href="#" class="service-item__btn reveal" style="--btn-color:#7A946B;">くわしくはこちら</a>
+        <p class="service-item__title">Chrono Bloom</p>
+        <p class="service-item__subtitle">なんでもない今日を、ちょっといい日に変える魔法。</p>
+        <p class="service-item__desc">今が一番美しい旬のお花を定期便でお届け。いつもの日常に心地よい彩りと癒やしを。</p>
+        <a href="#" class="service-item__btn">くわしくはこちら</a>
       </article>
 
-      <article class="service-item service-item--3">
+      <article class="service-item service-item--3" style="--btn-color:#8CA692; --illust-color:#697C6D;">
         <div class="reveal-box service-item__box" data-direction="right"></div>
         <div class="service-item__media reveal">
           <img class="service-item__image" src="picture/body_image/イメージ画像4.jpg" alt="ガーデニングアドバイザーの様子">
-          <img class="service-item__illust" src="picture/illust/イラスト5.png" alt="">
+          <span class="service-item__illust" style="--illust-src:url('../picture/illust/イラスト5.png');" role="img" aria-label=""></span>
         </div>
-        <p class="service-item__title reveal">Life with Green</p>
-        <p class="service-item__subtitle reveal">育てる喜びが、あなたの日々と共に大きくなるように。</p>
-        <p class="service-item__desc reveal">住環境やライフスタイルに寄り添い、植物と暮らす毎日やお手入れを優しくサポート。</p>
-        <a href="#" class="service-item__btn reveal" style="--btn-color:#8CA692;">くわしくはこちら</a>
+        <p class="service-item__title">Life with Green</p>
+        <p class="service-item__subtitle">育てる喜びが、あなたの日々と共に大きくなるように。</p>
+        <p class="service-item__desc">住環境やライフスタイルに寄り添い、植物と暮らす毎日やお手入れを優しくサポート。</p>
+        <a href="#" class="service-item__btn">くわしくはこちら</a>
       </article>
 
     </section>
 
     <section class="news-section" id="news">
-      <h2 class="section-heading reveal">－News</h2>
+      <h2 class="section-heading">－News</h2>
 
       <ul class="news-list">
-        <li class="news-item reveal">
+        <li class="news-item">
           <a href="#" class="news-item__link">
             <div class="news-item__thumb news-item__thumb--default">
               <img src="picture/logo/Bloom&amp;Breath_logo透過.png" alt="">
@@ -107,7 +110,7 @@
             </div>
           </a>
         </li>
-        <li class="news-item reveal">
+        <li class="news-item">
           <a href="#" class="news-item__link">
             <div class="news-item__thumb news-item__thumb--default">
               <img src="picture/logo/Bloom&amp;Breath_logo透過.png" alt="">
@@ -121,7 +124,7 @@
             </div>
           </a>
         </li>
-        <li class="news-item reveal">
+        <li class="news-item">
           <a href="#" class="news-item__link">
             <div class="news-item__thumb news-item__thumb--default">
               <img src="picture/logo/Bloom&amp;Breath_logo透過.png" alt="">
@@ -135,7 +138,7 @@
             </div>
           </a>
         </li>
-        <li class="news-item reveal">
+        <li class="news-item">
           <a href="#" class="news-item__link">
             <div class="news-item__thumb news-item__thumb--default">
               <img src="picture/logo/Bloom&amp;Breath_logo透過.png" alt="">
@@ -151,20 +154,20 @@
         </li>
       </ul>
 
-      <a href="#" class="news-more">お知らせ一覧　→</a>
+      <a href="#" class="news-more">お知らせ一覧　<span class="news-more__arrow">→</span></a>
     </section>
 
     <img class="access-divider" src="picture/body_image/イメージ画像5.jpg" alt="">
 
     <section class="access-section" id="access">
-      <h2 class="section-heading reveal">－Access</h2>
-      <p class="access-address reveal">〒150-0001<br>東京都渋谷区神宮前5丁目12-34<br>Greenery Terrace 1F</p>
-      <a href="#" class="access-btn reveal">お問い合わせはこちら</a>
+      <h2 class="section-heading">－Access</h2>
+      <p class="access-address">〒150-0001<br>東京都渋谷区神宮前5丁目12-34<br>Greenery Terrace 1F</p>
+      <a href="#" class="access-btn">お問い合わせはこちら</a>
     </section>
 
     <section class="shopinfo-section" id="shopinfo">
-      <h2 class="section-heading reveal">－Shop info</h2>
-      <dl class="shopinfo-list reveal">
+      <h2 class="section-heading">－Shop info</h2>
+      <dl class="shopinfo-list">
         <div class="shopinfo-row">
           <dt>定休日</dt>
           <dd>毎週火曜日・水曜日</dd>
@@ -177,9 +180,9 @@
     </section>
 
     <section class="cta-section" id="cta" style="background-image:url('picture/body_image/イメージ画像6.jpg')">
-      <div class="cta-inner reveal">
-        <p class="cta-heading">会員サイト</p>
-        <p class="cta-subheading">Member's site</p>
+      <div class="cta-inner">
+        <p class="cta-heading">My Breath</p>
+        <p class="cta-subheading">会員サイト</p>
         <p class="cta-desc">サブスクの入退会や履歴確認、ブーケやフラワーアレンジメントの予約がスムーズに完結。「My Breath」で、お花とあなたの暮らしをつなぐプライベート空間へ。</p>
         <a href="#" class="cta-btn">会員登録はこちら</a>
       </div>
@@ -193,7 +196,11 @@
       <a href="#" aria-label="X"><img src="picture/logo/Xlogo-black.png" alt="X"></a>
     </div>
     <button type="button" class="footer__pagetop" id="pageTopBtn">
-      <span class="footer__pagetop-arrow">^</span>
+      <span class="footer__pagetop-arrow">
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 10L10 2L19 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
       <span class="footer__pagetop-text">PAGE TOP</span>
     </button>
     <p class="site-footer__copyright">&copy; 2026 Bloom &amp; Breath. All Rights Reserved.</p>
